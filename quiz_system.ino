@@ -1,7 +1,31 @@
-// C++ code
-const int led = 7;
-const int button = 2;
-const int buzzer = 8;
+/*
+  This is a code for my mini project. It is an automated quiz buzzer system
+  that comes with several different features from other systems that exists.
+*/
+
+// define constants for pins and time limit
+const int BUTTON1_PIN = 2;
+const int BUTTON2_PIN = 3;
+const int BUTTON3_PIN = 4;
+const int RESET_PIN = 5;
+
+const int LED1_PIN = 6;
+const int LED2_PIN = 7;
+const int LED3_PIN = 8;
+const int COORDINATOR_LED_PIN = 9;
+
+const int TIME_LIMIT = 5000; // time limit in milliseconds (5 seconds)
+
+// define variables for the buzzer states, time, and rankings
+int buzzer1State = LOW;
+int buzzer2State = LOW;
+int buzzer3State = LOW;
+int resetState = LOW;
+unsigned long buzzer1Time = 0;
+unsigned long buzzer2Time = 0;
+unsigned long buzzer3Time = 0;
+int buzzerRankings[3] = {0, 0, 0};
+
 
 int buttonState = 0;  //variable for reading pushbutton status
 
