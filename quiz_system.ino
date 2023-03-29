@@ -31,10 +31,21 @@ int buttonState = 0;  //variable for reading pushbutton status
 
 int ledState = LOW;  //variable that sets the led low at the beginning
 
+// This setup funtion runs once when the program starts
 void setup()
 {
-  pinMode(led, OUTPUT);
-  pinMode(button, INPUT_PULLUP);
+  Serial.begin(9600);  // initialize serial communication
+
+  pinMode(BUTTON1_PIN, INPUT_PULLUP);
+  pinMode(BUTTON2_PIN, INPUT_PULLUP);
+  pinMode(BUTTON3_PIN, INPUT_PULLUP);
+  pinMode(RESET_PIN, INPUT_PULLUP);
+
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED3_PIN, OUTPUT);
+  pinMode(COORDINATOR_LED_PIN, OUTPUT);
+
   pinMode(buzzer, OUTPUT);
 }
 
