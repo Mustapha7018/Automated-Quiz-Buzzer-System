@@ -14,22 +14,20 @@ const int LED2_PIN = 7;
 const int LED3_PIN = 8;
 const int COORDINATOR_LED_PIN = 9;
 
+const int buzzer = 10;
+
 const int TIME_LIMIT = 5000; // time limit in milliseconds (5 seconds)
 
 // define variables for the buzzer states, time, and rankings
-int buzzer1State = LOW;
-int buzzer2State = LOW;
-int buzzer3State = LOW;
-int resetState = LOW;
-unsigned long buzzer1Time = 0;
-unsigned long buzzer2Time = 0;
-unsigned long buzzer3Time = 0;
-int buzzerRankings[3] = {0, 0, 0};
+bool buzzer1State = false;
+bool buzzer2State = false;
+bool buzzer3State = false;
+bool resetState = false; // reset;
+bool buzzerRung = false;
+unsigned long buzzerTimestamp = 0;
+unsigned long buzzerRankings[3] = {0, 0, 0};
+unsigned long rankCounter = 1;
 
-
-int buttonState = 0;  //variable for reading pushbutton status
-
-int ledState = LOW;  //variable that sets the led low at the beginning
 
 // This setup funtion runs once when the program starts
 void setup()
@@ -50,20 +48,78 @@ void setup()
 }
 
 void loop() {
-  buttonState = digitalRead(button);  //read the state of the pushbutton
  
-  if(buttonState == LOW) {
-    digitalWrite(led, HIGH);  //turn on LED
-    digitalWrite(buzzer, HIGH);
+   // Read button states
+  button1Pressed = digitalRead(button1) == LOW;
+  button2Pressed = digitalRead(button2) == LOW;
+  button3Pressed = digitalRead(button3) == LOW;
+  resetButtonPressed = digitalRead(resetButton) == LOW;
+  
+  // If any button is pressed and the buzzer has not been rung yet, record the timestamp and turn on its corresponding LED
+  if (button1Pressed && !buzzerRung) {
+    buzzerTimestamp = millis();
+    buzzerRank[0] = rankCounter;
+    rankCounter++;
+    digitalWrite(led1, HIGH);
+    digitalWrite(led2, LOW);
+    digitalWrite(led3, LOW);
+    digitalWrite(coordinatorLed, LOW);
+    buzzerRung = true;
     
-    //set tone to buzzer
     tone(buzzer, 1000);
-  	delay(3000);
-  	noTone(buzzer);
-  	delay(3000);
+    delay(3000);
+    noTone(buzzer);
+    delay(3000);
+    Serial.println("Contestant 1 rang the buzzer. Rank: " + String(buzzerRank[0]));
+  } 
+    else if (button2Pressed && !buzzerRung) {
+      buzzerTimestamp = millis();
+      buzzerRank[1] = rankCounter;
+      rankCounter++;
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, HIGH);
+      digitalWrite(led3, LOW);
+      digitalWrite(coordinatorLed, LOW);
+      buzzerRung = true;
+      
+      tone(buzzer, 1500);
+      delay(3000);
+      noTone(buzzer);
+      delay(3000);
+      Serial.println("Contestant 2 rang the buzzer. Rank: " + String(buzzerRank[1]));
+
+  } 
+    else if (button3Pressed && !buzzerRung) {
+      buzzerTimestamp = millis();
+      buzzerRank[2] = rankCounter;
+      rankCounter++;
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, HIGH);
+      digitalWrite(coordinatorLed, LOW);
+      buzzerRung = true;
+      
+      tone(buzzer, 2000);
+      delay(3000);
+      noTone(buzzer);
+      delay(3000);
+      Serial.println("Contestant 3 rang the buzzer. Rank: " + String(buzzerRank[2]));
+
   }
-  else{
-    digitalWrite(led, LOW);  //turn off LED
-    digitalWrite(buzzer, LOW);
+    else if (resetButtonPressed) {
+    // If the reset button is pressed, turn off all LEDs, reset the buzzer state variables, and print out the ranks on the serial monitor
+      buzzerRung = false;
+      rankCounter = 1;
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+      digitalWrite(coordinatorLed, HIGH);
+      tone(buzzer, 3000);
+      delay(600);
+      noTone(buzzer);
+      delay(450);
+      digitalWrite(coordinatorLed, LOW);
+      
+
   }
 }
